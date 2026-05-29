@@ -1,11 +1,14 @@
 {
-  "name": "salss-panel-demo",
-  "version": "1.0.0",
+  "name": "salss-panel",
+  "version": "2.0.0",
   "type": "module",
   "scripts": {
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "node-fetch": "^3.3.2",
+    "cors": "^2.8.5",
+    "node-telegram-bot-api": "^0.64.0"
   }
 }
