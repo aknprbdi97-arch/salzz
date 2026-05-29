@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Salss Panel | Creator</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%);
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            color: #e2e8f0;
+        }
+        .dashboard { max-width: 1400px; margin: 0 auto; padding: 1.5rem; }
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.8rem;
+            background: rgba(15, 25, 45, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo { font-size: 1.3rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
+        .logo i { color: #8b5cf6; font-size: 1.5rem; }
+        .user-info { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+        .money-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+        }
+        .role-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            background: #8b5cf6;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .admin-badge {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            background: #ef4444;
+            font-weight: 600;
+            font-size: 0.8rem;
+        }
+        .theme-btn, .logout-btn, .request-money-btn {
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .request-money-btn {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: #10b981;
+        }
+        .request-money-btn:hover { background: #10b981; }
+        .theme-btn:hover, .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #8b5cf6;
+        }
+        
+        .hero { text-align: center; margin-bottom: 2rem; }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 0.5rem; background: linear-gradient(135deg, #8b5cf6, #f59e0b); -webkit-background-clip: text; background-clip: text; color: transparent; }
+        .hero p { color: #8ca3bf; }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+        }
+        .stat-card h3 { font-size: 1.5rem; color: #8b5cf6; }
+        .stat-card p { font-size: 0.7rem; color: #8ca3bf; }
+        .stat-card.money h3 { color: #f59e0b; }
+        
+        .rules-box {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.2rem;
+            border: 1px solid rgba(139, 92, 246, 0.3);
+            margin-bottom: 2rem;
+        }
+        .rules-box h3 { margin-bottom: 0.8rem; display: flex; align-items: center; gap: 8px; color: #f59e0b; }
+        .rules-list { list-style: none; }
+        .rules-list li { padding: 0.5rem 0; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; gap: 10px; font-size: 0.85rem; }
+        .rules-list li i { width: 20px; color: #8b5cf6; }
+        .rules-list li:last-child { border-bottom: none; }
+        
+        .package-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.2rem;
+            margin-bottom: 2rem;
+        }
+        .package-card {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.2rem;
+            padding: 1.2rem;
+            text-align: center;
+            cursor: pointer;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.3s;
+        }
+        .package-card:hover, .package-card.selected {
+            transform: translateY(-5px);
+            border-color: #f59e0b;
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .package-icon { font-size: 2rem; margin-bottom: 0.5rem; }
+        .package-name { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.3rem; }
+        .package-spec { font-size: 0.7rem; color: #8ca3bf; }
+        .package-price { margin-top: 0.5rem; padding: 0.2rem 0.5rem; background: rgba(245, 158, 11, 0.2); border-radius: 2rem; display: inline-block; font-size: 0.7rem; color: #f59e0b; }
+        
+        .form-card {
+            background: rgba(15, 25, 45, 0.6);
+            backdrop-filter: blur(10px);
+            border-radius: 1.5rem;
+            padding: 1.8rem;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            margin-bottom: 2rem;
+        }
+        .form-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+        .form-group label { font-size: 0.8rem; color: #8ca3bf; }
+        .form-group input {
+            padding: 0.8rem 1rem;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.8rem;
+            color: white;
+            font-size: 0.9rem;
+        }
+        .btn-create {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #10b981;
+            padding: 12px 20px;
+            border-radius: 12px;
+            animation: slideIn 0.3s ease;
+            z-index: 1000;
+        }
+        .toast.error { background: #ef4444; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .package-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+            .hero h1 { font-size: 1.8rem; }
+            .navbar { flex-direction: column; text-align: center; }
+            .user-info { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+    // Data contoh untuk demo
+    let currentUser = { username: "admin", role: "admin", money: 999999 };
+    let selectedPackage = null;
+    
+    const packages = [
+        { name: "1 GB", ram: "1024", cpu: "40", disk: "10240", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "2 GB", ram: "2048", cpu: "60", disk: "20480", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "3 GB", ram: "3072", cpu: "80", disk: "30720", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "4 GB", ram: "4096", cpu: "100", disk: "40960", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "5 GB", ram: "5120", cpu: "120", disk: "51200", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "6 GB", ram: "6144", cpu: "140", disk: "61440", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "7 GB", ram: "7168", cpu: "160", disk: "71680", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "8 GB", ram: "8192", cpu: "180", disk: "81920", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "9 GB", ram: "9216", cpu: "200", disk: "92160", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "10 GB", ram: "10240", cpu: "220", disk: "102400", icon: "fas fa-microchip", price: "5 Money" },
+        { name: "♾️ UNLIMITED", ram: "0", cpu: "0", disk: "0", icon: "fas fa-infinity", price: "10 Money", unlimited: true }
+    ];
+
+    function showToast(msg, type = 'success') {
+        let toast = document.querySelector('.toast');
+        if (toast) toast.remove();
+        toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i> ${msg}`;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function toggleTheme() {
+        const isLight = document.body.classList.contains('light');
+        if (isLight) {
+            document.body.classList.remove('light');
+            document.body.style.background = 'linear-gradient(135deg, #0f0c29 0%, #1a1a3e 50%, #24243e 100%)';
+            showToast('Dark theme activated', 'info');
+        } else {
+            document.body.classList.add('light');
+            document.body.style.background = 'linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%)';
+            document.body.style.color = '#1e293b';
+            showToast('Light theme activated', 'info');
+        }
+    }
+
+    async function loadDashboard() {
+        document.getElementById('app').innerHTML = `
+            <div class="dashboard">
+                <nav class="navbar">
+                    <div class="logo"><i class="fas fa-dragon"></i> Salss Panel</div>
+                    <div class="user-info">
+                        <span class="money-badge"><i class="fas fa-coins"></i> ${currentUser.money} Money</span>
+                        <span class="admin-badge">${currentUser.role.toUpperCase()}</span>
+                        <span><i class="fas fa-user-circle"></i> ${currentUser.username}</span>
+                        <button class="request-money-btn" onclick="requestMoney()"><i class="fas fa-gift"></i> Request Money</button>
+                        <button class="theme-btn" onclick="toggleTheme()"><i class="fas fa-palette"></i> Theme</button>
+                        <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+                    </div>
+                </nav>
+                
+                <div class="hero">
+                    <h1>Panel Creator</h1>
+                    <p>Create and manage your game servers with ease</p>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card"><h3>0</h3><p>Total Servers</p></div>
+                    <div class="stat-card"><h3>1</h3><p>Total Users</p></div>
+                    <div class="stat-card"><h3>0</h3><p>Premium Users</p></div>
+                    <div class="stat-card money"><h3>999999</h3><p>Total Money</p></div>
+                </div>
+                
+                <div class="rules-box">
+                    <h3><i class="fas fa-gavel"></i> 📜 Rules & Information</h3>
+                    <ul class="rules-list">
+                        <li><i class="fas fa-coins"></i> Every user gets <strong>20 Money</strong> to create panels</li>
+                        <li><i class="fas fa-clock"></i> <strong>24 hours cooldown</strong> between panel creations</li>
+                        <li><i class="fas fa-gift"></i> Request money to admin: <strong>5 Money</strong> (Admin will respond via Telegram)</li>
+                        <li><i class="fas fa-ban"></i> No illegal content, no DDoS, no mining</li>
+                    </ul>
+                </div>
+                
+                <div class="section-title"><i class="fas fa-box"></i> Select Your Package</div>
+                <div class="package-grid" id="packageGrid"></div>
+                
+                <div id="formContainer" style="display: none;">
+                    <div class="form-card">
+                        <h3><i class="fas fa-plus-circle"></i> Server Details <span style="color: #f59e0b;">(Cost: 5 Money)</span></h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user"></i> Panel Username (bebas)</label>
+                                <input type="text" id="serverUsername" placeholder="Enter panel username">
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-envelope"></i> Email Address</label>
+                                <input type="email" id="serverEmail" placeholder="your@email.com">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label><i class="fab fa-telegram"></i> Telegram ID (Optional)</label>
+                                <input type="text" id="serverTelegram" placeholder="Enter your Telegram ID">
+                            </div>
+                        </div>
+                        <button class="btn-create" id="createBtn" onclick="createServer()"><i class="fas fa-rocket"></i> Create Server (5 Money)</button>
+                    </div>
+                </div>
+                
+                <div class="section-title"><i class="fas fa-server"></i> Your Servers</div>
+                <div id="serversList" class="servers-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem;">
+                    <div style="text-align: center; padding: 2rem; color: #8ca3bf;">No servers yet. Create your first server!</div>
+                </div>
+            </div>
+        `;
+        
+        renderPackages();
+    }
+    
+    function renderPackages() {
+        const container = document.getElementById('packageGrid');
+        container.innerHTML = packages.map(pkg => `
+            <div class="package-card ${selectedPackage === pkg.name ? 'selected' : ''}" onclick="selectPackage('${pkg.name}')">
+                <div class="package-icon"><i class="${pkg.icon}"></i></div>
+                <div class="package-name">${pkg.name}</div>
+                <div class="package-spec">${pkg.unlimited ? '♾️ Unlimited Resources' : `${pkg.ram} MB RAM | ${pkg.cpu}% CPU`}</div>
+                <div class="package-price">${pkg.price}</div>
+            </div>
+        `).join('');
+    }
+    
+    window.selectPackage = (name) => {
+        selectedPackage = name;
+        renderPackages();
+        document.getElementById('formContainer').style.display = 'block';
+    };
+    
+    window.requestMoney = async () => {
+        showToast('✅ Request sent to admin! You will be notified when approved.', 'success');
+    };
+    
+    window.logout = () => {
+        showToast('Logged out successfully');
+        setTimeout(() => location.reload(), 1000);
+    };
+    
+    window.createServer = async () => {
+        const username = document.getElementById('serverUsername').value;
+        const email = document.getElementById('serverEmail').value;
+        const telegramId = document.getElementById('serverTelegram').value;
+        const pkg = packages.find(p => p.name === selectedPackage);
+        
+        if (!username) {
+            showToast('Please enter panel username!', 'error');
+            return;
+        }
+        if (!email) {
+            showToast('Please enter your email address!', 'error');
+            return;
+        }
+        if (!selectedPackage) {
+            showToast('Please select a package first!', 'error');
+            return;
+        }
+        
+        const btn = document.getElementById('createBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Creating Server...';
+        
+        setTimeout(() => {
+            const newBalance = currentUser.money - 5;
+            currentUser.money = newBalance;
+            
+            showToast(`✅ Server created successfully!\nUsername: ${username}\nPassword: ${username}123\nRAM: ${pkg.name}\nRemaining Balance: ${newBalance} Money`, 'success');
+            
+            document.getElementById('serverUsername').value = '';
+            document.getElementById('serverEmail').value = '';
+            document.getElementById('serverTelegram').value = '';
+            selectedPackage = null;
+            renderPackages();
+            document.getElementById('formContainer').style.display = 'none';
+            
+            // Update money display
+            const moneySpan = document.querySelector('.money-badge');
+            if (moneySpan) moneySpan.innerHTML = `<i class="fas fa-coins"></i> ${newBalance} Money`;
+            
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-rocket"></i> Create Server (5 Money)';
+        }, 1500);
+    };
+    
+    loadDashboard();
+</script>
+</body>
+</html>
